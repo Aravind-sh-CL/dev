@@ -1,47 +1,38 @@
 import { useState } from "react";
 
-function Register() {
-
+function Register({ onBack }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
   const handleRegister = async (e) => {
-
     e.preventDefault();
 
     try {
-
       const response = await fetch("http://localhost:5000/register", {
         method: "POST",
-
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-
         body: JSON.stringify({
           username,
           email,
-          password
-        })
+          password,
+        }),
       });
 
       const data = await response.json();
 
       setMessage(data.message);
-
     } catch (error) {
-
       console.error(error);
-
       setMessage("Unable to connect to the backend");
     }
   };
 
   return (
     <div className="container">
-
       <div className="login-box">
 
         <h1>Register</h1>
@@ -77,8 +68,14 @@ function Register() {
 
         {message && <p>{message}</p>}
 
-      </div>
+        <button
+          type="button"
+          onClick={onBack}
+        >
+          Back to Dashboard
+        </button>
 
+      </div>
     </div>
   );
 }

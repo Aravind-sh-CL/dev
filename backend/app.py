@@ -5,7 +5,10 @@ app = Flask(__name__)
 
 CORS(app)
 
-# Temporary users
+# -------------------------
+# Users
+# -------------------------
+
 users = [
     {
         "username": "aravind",
@@ -15,12 +18,27 @@ users = [
 ]
 
 
-@app.route("/")
-def home():
-    return "Flask Backend is Running!"
+# -------------------------
+# Dashboard
+# -------------------------
+
+@app.route("/dashboard", methods=["GET"])
+def dashboard():
+
+    return jsonify({
+        "success": True,
+        "message": "Welcome to the Dashboard",
+        "options": [
+            "Login",
+            "Register"
+        ]
+    }), 200
 
 
-# LOGIN
+# -------------------------
+# Login
+# -------------------------
+
 @app.route("/login", methods=["POST"])
 def login():
 
@@ -30,7 +48,6 @@ def login():
     password = data.get("password")
 
     for user in users:
-
         if user["username"] == username and user["password"] == password:
 
             return jsonify({
@@ -44,7 +61,10 @@ def login():
     }), 401
 
 
-# REGISTER
+# -------------------------
+# Register
+# -------------------------
+
 @app.route("/register", methods=["POST"])
 def register():
 
@@ -54,42 +74,58 @@ def register():
     email = data.get("email")
     password = data.get("password")
 
-    # Check required fields
     if not username or not email or not password:
+
         return jsonify({
             "success": False,
             "message": "All fields are required"
         }), 400
 
-    # Check if username already exists
+    # Check duplicate username/email
+
     for user in users:
 
         if user["username"] == username:
+
             return jsonify({
                 "success": False,
                 "message": "Username already exists"
-            }), 409
+            }), 400
 
         if user["email"] == email:
+
             return jsonify({
                 "success": False,
-                "message": "Email already registered"
-            }), 409
+                "message": "Email already exists"
+            }), 400
 
-    # Create new user
-    new_user = {
+    # Add new user
+
+    users.append({
         "username": username,
         "email": email,
         "password": password
-    }
-
-    users.append(new_user)
+    })
 
     return jsonify({
         "success": True,
         "message": "Registration successful"
     }), 201
 
+
+# -------------------------
+# Home
+# -------------------------
+
+@app.route("/")
+def home():
+
+    return "Flask Backend is Running!"
+
+
+# -------------------------
+# Run server
+# -------------------------
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

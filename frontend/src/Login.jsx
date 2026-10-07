@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function Login() {
+function Login({ onBack }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -32,9 +32,11 @@ function Login() {
   return (
     <div className="container">
       <div className="login-box">
+
         <h1>Login</h1>
 
         <form onSubmit={handleLogin}>
+
           <input
             type="text"
             placeholder="Username"
@@ -49,10 +51,21 @@ function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <button type="submit">Login</button>
+          <button type="submit">
+            Login
+          </button>
+
         </form>
 
         {message && <p>{message}</p>}
+
+        <button
+          type="button"
+          onClick={onBack}
+        >
+          Back to Dashboard
+        </button>
+
       </div>
     </div>
   );
